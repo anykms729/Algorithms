@@ -6,10 +6,11 @@ import java.util.*;
 
 public class TABA {
     public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        Stock[] stocks = readStockData();
 
         // Invoke question 1 (a): Read Stock CSV file into memory using the Buffered reader
 //        try {
-//            Stock[] stocks = readStockData();
 //            for (Stock stock : stocks) {
 //                System.out.println(stock);
 //            }
@@ -17,12 +18,22 @@ public class TABA {
 //            e.printStackTrace();
 //        }
 
-        // Invoke question 1 (b): Write a recursive method to compute the sum of weight for Stock CSV file
-        Stock[] stocks = readStockData();
-//        System.out.printf(String.valueOf(sumWeights(stocks, 0)));
+        // Invoke question 1 (b): Write a recursive method to compute the sum of weight column for Stock CSV file
+        System.out.println("Sum of weight column for Stock CSV file: " + sumWeights(stocks, 0));
 
         // Invoke question 1 (c): Write an iterative method to find the largest value in weight column from part (b)
-        System.out.printf(String.valueOf(findLargestWeight(stocks)));
+        System.out.println("Largest value of weight column for Stock CSV file: " + findLargestWeight(stocks));
+
+
+        // Invoke question 1 (d): Write a sorting method for all possible columns in the data file. Your application should allow the user the option to sort the array using any column
+        System.out.print("Enter the column to sort by (1-6): ");
+        int columnChoice = scanner.nextInt();
+        // sort the array based on user's choice
+        mergeSort(stocks, columnChoice);
+
+        for (Stock stock : stocks) {
+            System.out.println(stock);
+        }
 
         // Invoke question 4 (b)
 //        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
@@ -57,7 +68,7 @@ public class TABA {
         return stocks;
     }
 
-    static class Stock implements Comparable<Object> {
+    static class Stock implements Comparable<Stock> {
 
         private int stockNo;
         private float stockSize;
@@ -65,6 +76,7 @@ public class TABA {
         private String productType;
         private float weight;
         private String productName;
+
 
         // Constructor
         public Stock(int stockNo, float stockSize, float profit, String productType, float weight, String productName) {
@@ -126,20 +138,6 @@ public class TABA {
             this.productName = productName;
         }
 
-        // so the stock objects can be compared when sorting/searching
-        // NOTE: this will only allow comparisons based on the stockNo of the stock
-        @Override
-        public int compareTo(Object obj) {
-
-        /*
-        Edit this section so it compares the appropriate
-        column you wish to sort by
-        */
-
-            ReadStockData.Stock stk = (ReadStockData.Stock) obj;
-            return stockNo - (stk.getStockNo());
-        }
-
         @Override
         public String toString() {
             return "Stock{" +
@@ -150,6 +148,31 @@ public class TABA {
                     ", weight=" + weight +
                     ", productName='" + productName + '\'' +
                     '}';
+        }
+
+        @Override
+        public int compareTo(Stock other) {
+            // default to sorting by stockNo
+            return compareTo(other, 1);
+        }
+
+        public int compareTo(Stock other, int choice) {
+            switch (choice) {
+                case 1: // compare based on stockNo
+                    return this.stockNo - other.stockNo;
+                case 2: // compare based on stockSize
+                    return Float.compare(this.stockSize, other.stockSize);
+                case 3: // compare based on profit
+                    return Float.compare(this.profit, other.profit);
+                case 4: // compare based on productType
+                    return this.productType.compareTo(other.productType);
+                case 5: // compare based on weight
+                    return Float.compare(this.weight, other.weight);
+                case 6: // compare based on productName
+                    return this.productName.compareTo(other.productName);
+                default:
+                    throw new IllegalArgumentException("Invalid choice");
+            }
         }
     }
 
@@ -176,6 +199,36 @@ public class TABA {
     }
 
     // Question 1 (d)
+    public static void mergeSort(Stock[] arr, int choice) {
+        if (arr == null || arr.length <= 1) {
+            return;
+        }
+        int mid = arr.length / 2;
+        Stock[] left = Arrays.copyOfRange(arr, 0, mid);
+        Stock[] right = Arrays.copyOfRange(arr, mid, arr.length);
+        mergeSort(left, choice);
+        mergeSort(right, choice);
+        merge(arr, left, right, choice);
+    }
+
+    private static void merge(Stock[] arr, Stock[] left, Stock[] right, int choice) {
+        int i = 0, j = 0, k = 0;
+        while (i < left.length && j < right.length) {
+            if (left[i].compareTo(right[j], choice) < 0) {
+                arr[k++] = left[i++];
+            } else {
+                arr[k++] = right[j++];
+            }
+        }
+        while (i < left.length) {
+            arr[k++] = left[i++];
+        }
+        while (j < right.length) {
+            arr[k++] = right[j++];
+        }
+    }
+
+
     // Question 1 (e)
 
 
