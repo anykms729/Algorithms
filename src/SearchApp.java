@@ -42,19 +42,12 @@ public class SearchApp {
 
 
     static int linearSearch(int[] arr, int query) {
-
-        long start_Time = System.nanoTime();
-        for (int index = 0; index < arr.length; index++) {
-            if (arr[index] == query) {
-                long end_Time = System.nanoTime();
-                long duration = end_Time - start_Time;
-                System.out.println("Linear takes " + duration);
-
-                return index;
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == query) {
+                return i; // Return the index where query is found
             }
-            else System.out.println("No such value");
-            return -1;
         }
-        return -1;
+        return -1; // Return -1 if query is not found in the array
     }
 }

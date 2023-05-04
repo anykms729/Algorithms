@@ -34,7 +34,7 @@ public class RollingDiceMonteCarlo {
         for(int rollFrequency : diceRollCounter){
 
             System.out.print("Likelihood of rolling a " + index + ": ");
-            System.out.println((int)(100.0 *(rollFrequency / 1000000.0)) + "%");
+            System.out.println((int)((rollFrequency / 10000)) + "%");
             index++;
         }
     }

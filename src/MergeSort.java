@@ -68,25 +68,6 @@ public class MergeSort extends Thread {
             t1.join();
             t2.join();
 
-            // Merge the sorted subarrays
-            int[] temp = new int[data.length];
-            int i = 0, j = data.length / 2, k = 0;
-            while (i < data.length / 2 && j < data.length) {
-                if (data[i] <= data[j]) {
-                    temp[k++] = data[i++];
-                } else {
-                    temp[k++] = data[j++];
-                }
-            }
-            while (i < data.length / 2) {
-                temp[k++] = data[i++];
-            }
-            while (j < data.length) {
-                temp[k++] = data[j++];
-            }
-            for (i = 0; i < data.length; i++) {
-                data[i] = temp[i];
-            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
