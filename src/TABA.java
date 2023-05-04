@@ -30,8 +30,7 @@ public class TABA {
         int columnChoice = scanner.nextInt();
         // sort the array based on user's choice
         mergeSort(stocks, columnChoice);
-
-        for (Stock stock : stocks) {
+         for (Stock stock : stocks) {
             System.out.println(stock);
         }
 
@@ -67,6 +66,7 @@ public class TABA {
         br.close(); // close the BufferedReader
         return stocks;
     }
+
 
     static class Stock implements Comparable<Stock> {
 
