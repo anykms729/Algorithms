@@ -8,21 +8,21 @@ public class TABA {
     public static void main(String[] args) throws IOException {
 
         // Invoke question 1 (a): Read Stock CSV file into memory using the Buffered reader
-        try {
-            Stock[] stocks = readStockData();
-            for (Stock stock : stocks) {
-                System.out.println(stock);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Stock[] stocks = readStockData();
+//            for (Stock stock : stocks) {
+//                System.out.println(stock);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // Invoke question 1 (b): Write a recursive method to compute the sum of weight for Stock CSV file
         Stock[] stocks = readStockData();
-        System.out.printf(String.valueOf(sumWeights(stocks, 0)));
+//        System.out.printf(String.valueOf(sumWeights(stocks, 0)));
 
-        // Invoke question 1 (c): Write a recursive method to compute the sum of weight for Stock CSV file
-
+        // Invoke question 1 (c): Write an iterative method to find the largest value in weight column from part (b)
+        System.out.printf(String.valueOf(findLargestWeight(stocks)));
 
         // Invoke question 4 (b)
 //        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
@@ -56,6 +56,7 @@ public class TABA {
         br.close(); // close the BufferedReader
         return stocks;
     }
+
     static class Stock implements Comparable<Object> {
 
         private int stockNo;
@@ -164,6 +165,16 @@ public class TABA {
     }
 
     // Question 1 (c)
+    public static float findLargestWeight(Stock[] stocks) {
+        float largestWeight = stocks[0].getWeight();
+        for (int j = 1; j < stocks.length; j++) {
+            if (stocks[j].getWeight() > largestWeight) {
+                largestWeight = stocks[j].getWeight();
+            }
+        }
+        return largestWeight;
+    }
+
     // Question 1 (d)
     // Question 1 (e)
 
