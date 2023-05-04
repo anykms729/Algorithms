@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class TABA {
@@ -25,14 +22,17 @@ public class TABA {
         System.out.println("Largest value of weight column for Stock CSV file: " + findLargestWeight(stocks));
 
 
-        // Invoke question 1 (d): Write a sorting method for all possible columns in the data file. Your application should allow the user the option to sort the array using any column
-        System.out.print("Enter the column to sort by (1-6): ");
-        int columnChoice = scanner.nextInt();
-        // sort the array based on user's choice
-        mergeSort(stocks, columnChoice);
-         for (Stock stock : stocks) {
-            System.out.println(stock);
-        }
+//        // Invoke question 1 (d): Write a sorting method for all possible columns in the data file. Your application should allow the user the option to sort the array using any column
+//        System.out.print("Enter the column to sort by (1-6): ");
+//        int columnChoice = scanner.nextInt();
+//        // sort the array based on user's choice
+//        mergeSort(stocks, columnChoice);
+//        for (Stock stock : stocks) {
+//            System.out.println(stock);
+//        }
+
+        // Invoke question 1 (e)
+        multiThreadedSorting(stocks);
 
         // Invoke question 4 (b)
 //        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
@@ -67,16 +67,14 @@ public class TABA {
         return stocks;
     }
 
-
     static class Stock implements Comparable<Stock> {
-
         private int stockNo;
         private float stockSize;
         private float profit;
         private String productType;
         private float weight;
         private String productName;
-
+        private String columnName;
 
         // Constructor
         public Stock(int stockNo, float stockSize, float profit, String productType, float weight, String productName) {
@@ -89,7 +87,32 @@ public class TABA {
             this.productName = productName;
         }
 
+
         // setters and getters
+        public String getColumnName(int choice) {
+            switch (choice) {
+                case 0:
+                    columnName = "stock_no";
+                    break;
+                case 1:
+                    columnName = "product_size";
+                    break;
+                case 2:
+                    columnName = "profit";
+                    break;
+                case 3:
+                    columnName = "product_type";
+                    break;
+                case 4:
+                    columnName = "weight";
+                    break;
+                case 5:
+                    columnName = "product_name";
+                    break;
+            }
+            return columnName;
+        }
+
         public int getStockNo() {
             return stockNo;
         }
@@ -228,8 +251,77 @@ public class TABA {
         }
     }
 
-
     // Question 1 (e)
+    public static void multiThreadedSorting(Stock[] stocks) throws IOException {
+        // Create an array of threads for sorting
+        Random random = new Random();
+        Thread[] threads = new Thread[6];
+        int columnIndex = random.nextInt(5);
+
+        int choice = columnIndex + 1;
+        threads[columnIndex] = new Thread(() -> mergeSortForMultiThreading(stocks, choice));
+        threads[columnIndex].start();
+
+        String outputFileName = "sortedStock_C" + (choice - 1) + ".csv";
+        writeStockData(stocks, outputFileName);
+
+        System.out.println("Thread " + columnIndex + " sorted column index " + columnIndex + " (Column name: " + stocks[columnIndex].getColumnName(columnIndex)+")" + ", generating " + outputFileName + " file as an output");
+    }
+
+    public static void mergeSortForMultiThreading(Stock[] stocks, int choice) {
+        mergeSortForMultiThreading(stocks, choice, 0, stocks.length - 1);
+    }
+
+    private static void mergeSortForMultiThreading(Stock[] stocks, int choice, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSortForMultiThreading(stocks, choice, left, mid);
+            mergeSortForMultiThreading(stocks, choice, mid + 1, right);
+            mergeForMultiThreading(stocks, choice, left, mid, right);
+        }
+    }
+
+    private static void mergeForMultiThreading(Stock[] stocks, int choice, int left, int mid, int right) {
+        Stock[] temp = new Stock[right - left + 1];
+        int i = left;
+        int j = mid + 1;
+        int k = 0;
+        while (i <= mid && j <= right) {
+            if (stocks[i].compareTo(stocks[j], choice) <= 0) {
+                temp[k++] = stocks[i++];
+            } else {
+                temp[k++] = stocks[j++];
+            }
+        }
+        while (i <= mid) {
+            temp[k++] = stocks[i++];
+        }
+        while (j <= right) {
+            temp[k++] = stocks[j++];
+        }
+        for (k = 0; k < temp.length; k++) {
+            stocks[left + k] = temp[k];
+        }
+    }
+
+    private static void writeStockData(Stock[] stocks, String outputFileName) throws IOException {
+        File directory = new File("./");
+        String name = directory.getAbsolutePath() + "//" + outputFileName;
+        BufferedWriter bw = new BufferedWriter(new FileWriter(name));
+
+        // write header row
+        bw.write("stock_no,product_size,profit,product_type,weight,product_name");
+        bw.newLine();
+
+        for (int i = 0; i < stocks.length; i++) {
+            bw.write(stocks[i].getStockNo() + "," + stocks[i].getStockSize() + "," + stocks[i].getProfit() + ","
+                    + stocks[i].getProductType() + "," + stocks[i].getWeight() + "," + stocks[i].getProductName());
+            bw.newLine();
+        }
+
+        bw.flush(); // flush and close the BufferedWriter
+        bw.close();
+    }
 
 
     // Question 4 (b)
