@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class EggTimerApp {
 
     public static void main(String args[]) {
@@ -9,7 +10,6 @@ public class EggTimerApp {
         et.start();
         sc.nextLine();
         et.terminate();
-
     }
 
     public static class EggTimer extends Thread {

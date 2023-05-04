@@ -8,21 +8,22 @@
 public class MessagePrinterTest {
 
     public static void main(String[] args) throws InterruptedException {
-//        Thread t1 = new MessagePrinter("Hello", 5);
-//        Thread t2 = new MessagePrinter("Hello 2", 5);
-//        t1.start();
-//        t2.start();
-//        try {
-//            t1.join();
-//        } catch (InterruptedException e) {
-//            // Way for thread support its own interruption
-//            System.out.println("I'm stopped... I wasn't done yet");
-//            return;
-//        }
-//        System.out.println("All messages are printed");
+        Thread t1 = new MessagePrinter("Hello", 5);
+        Thread t2 = new MessagePrinter("Hello 2", 5);
+        t1.start();
+        t2.start();
+        try {
+            // The Thread.join method allows one thread to wait for the completion of another
+            t1.join();
+        } catch (InterruptedException e) {
+            // Way for thread support its own interruption
+            System.out.println("I'm stopped... I wasn't done yet");
+            return;
+        }
+        System.out.println("All messages are printed");
     }
 
-    private static class MessagePrinter extends Thread {
+    public static class MessagePrinter extends Thread {
         String message;
         int count;
 
@@ -30,7 +31,12 @@ public class MessagePrinterTest {
             this.message = message;
             this.count = count;
         }
-    }
-    public class MessagePrinterStateTest{
+
+        @Override
+        public void run() {
+            for (int i=0; i<count; i++){
+                System.out.println(message);
+            }
+        }
     }
 }
