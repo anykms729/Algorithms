@@ -10,8 +10,7 @@ public class MergeSort extends Thread {
         this.left = left;
         this.right = right;
     }
-
-    public void run() {
+     public void run() {
         if (left < right) {
             int middle = (left + right) / 2;
 

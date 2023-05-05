@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class SearchApp {
     public static void main(String args[]) {
 

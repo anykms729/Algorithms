@@ -4,16 +4,14 @@ import java.util.*;
 public class TABA {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
+
+        // Method "readStockData()" is written to solve for question 1 (a) mainly, but will be used other sub-questions as well under the question 1
         Stock[] stocks = readStockData();
 
         // Invoke question 1 (a): Read Stock CSV file into memory using the Buffered reader
-//        try {
-//            for (Stock stock : stocks) {
-//                System.out.println(stock);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        for (Stock stock : stocks) {
+            System.out.println(stock);
+        }
 
         // Invoke question 1 (b): Write a recursive method to compute the sum of weight column for Stock CSV file
         System.out.println("Sum of weight column for Stock CSV file: " + sumWeights(stocks, 0));
@@ -22,19 +20,20 @@ public class TABA {
         System.out.println("Largest value of weight column for Stock CSV file: " + findLargestWeight(stocks));
 
 
-//        // Invoke question 1 (d): Write a sorting method for all possible columns in the data file. Your application should allow the user the option to sort the array using any column
-//        System.out.print("Enter the column to sort by (1-6): ");
-//        int columnChoice = scanner.nextInt();
-//        // sort the array based on user's choice
-//        mergeSort(stocks, columnChoice);
-//        for (Stock stock : stocks) {
-//            System.out.println(stock);
-//        }
+        // Invoke question 1 (d): Write a sorting method for all possible columns in the data file. Your application should allow the user the option to sort the array using any column
+        System.out.print("Enter the column to sort by (1-6): ");
+        int columnChoice = scanner.nextInt();
 
-        // Invoke question 1 (e)
-//        multiThreadedSorting(stocks);
+        // Sort the array based on user's choice
+        mergeSort(stocks, columnChoice);
+        for (Stock stock : stocks) {
+            System.out.println(stock);
+        }
 
-        // Invoke question 2
+        // Invoke question 1 (e): Create a multithreaded solution, where each thread sorts a copy of the data in a different order depending on the column being sorted
+        multiThreadedSorting(stocks);
+
+        // Invoke question 2: Below code to prepare some data used for solving sub-questions under the question 2
         Random random = new Random();
         Stock[] unsortedStockArray = new Stock[]{stocks[random.nextInt(0, 10)], stocks[random.nextInt(11, 20)], stocks[random.nextInt(21, 30)], stocks[random.nextInt(31, 40)]};
         StockLinkedList<Stock> stocksLinkedList = new StockLinkedList<>();
@@ -60,17 +59,16 @@ public class TABA {
         getItemsAtIndexLinkedList(stocksLinkedList, 3);
 
         // Invoke question 4 (b)
-//        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
+        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
 
         // Invoke question 4 (c)
-//        sortAndRemoveMultiplesOfFiveImplementationWithMultiThreading();
+        sortAndRemoveMultiplesOfFiveImplementationWithMultiThreading();
     }
 
     // Question 1 (a)
     public static Stock[] readStockData() throws IOException {
 
-        // parsing and reading the CSV file data into the stock (object) array
-        // provide the path here...
+        // Parsing and reading the CSV file data into the stock (object) array
         File directory = new File("./");
         String name = directory.getAbsolutePath() + "//Stock.csv";
         BufferedReader br = new BufferedReader(new FileReader(name));
@@ -82,16 +80,17 @@ public class TABA {
         int i = 0;
         String st;
 
-        while ((st = br.readLine()) != null) // Read the file line by line
+        // Read the file line by line
+        while ((st = br.readLine()) != null)
         {
             String[] data = st.split(",");
             stocks[i++] = new Stock(Integer.parseInt(data[0]), Float.parseFloat(data[1]), Float.parseFloat(data[2]),
                     data[3], Float.parseFloat(data[4]), data[5]);
         }
-        br.close(); // close the BufferedReader
+        // close the BufferedReader
+        br.close();
         return stocks;
     }
-
     static class Stock implements Comparable<Stock> {
         private int stockNo;
         private float stockSize;
@@ -113,7 +112,7 @@ public class TABA {
         }
 
 
-        // setters and getters
+        // Setters and getters
         public String getColumnName(int choice) {
             switch (choice) {
                 case 0:
@@ -226,11 +225,11 @@ public class TABA {
 
     // Question 1 (b)
     public static float sumWeights(Stock[] stocks, int index) {
-        // base case: if we've reached the end of the array, return 0
+        // Base case: if reached at the end of the array, return 0
         if (index == stocks.length) {
             return 0;
         } else {
-            // recursive case: add the weight of the current stock to the sum of the weights of the remaining stocks
+            // Recursive case: add the weight of the current stock to the sum of the weights of the remaining stocks
             return stocks[index].getWeight() + sumWeights(stocks, index + 1);
         }
     }
@@ -335,7 +334,7 @@ public class TABA {
         String name = directory.getAbsolutePath() + "//" + outputFileName;
         BufferedWriter bw = new BufferedWriter(new FileWriter(name));
 
-        // write header row
+        // Write header row
         bw.write("stock_no,product_size,profit,product_type,weight,product_name");
         bw.newLine();
 
@@ -345,7 +344,8 @@ public class TABA {
             bw.newLine();
         }
 
-        bw.flush(); // flush and close the BufferedWriter
+        // Flush and close the BufferedWriter
+        bw.flush();
         bw.close();
     }
 
@@ -521,7 +521,7 @@ public class TABA {
         Long startTime = System.nanoTime();
         Stock result = unsortedStockArray[index];
         Long endTime = System.nanoTime();
-        System.out.println("Get item at Index: " + index +" "+ result + " in unsorted array in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index + " " + result + " in unsorted array in " + (endTime - startTime) + " seconds");
         return result;
     }
 
@@ -535,7 +535,7 @@ public class TABA {
         Long startTime = System.nanoTime();
         Stock result = sortedStockArray[index];
         Long endTime = System.nanoTime();
-        System.out.println("Get item at Index: " + index +" "+ result + " in sorted array in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index + " " + result + " in sorted array in " + (endTime - startTime) + " seconds");
         return result;
     }
 
@@ -546,10 +546,9 @@ public class TABA {
         Long endTime = System.nanoTime();
 
         // Print results
-        System.out.println("Get item at Index: " + index +" "+ result + " in linkedList in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index + " " + result + " in linkedList in " + (endTime - startTime) + " seconds");
         return result;
     }
-
 
     // Question 4 (b)
     public static void sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading() {
@@ -581,8 +580,6 @@ public class TABA {
             System.out.println(Arrays.toString(arr));
         }
     }
-
-    // Question 4 (b)
     public static List<int[]> sortAndRemoveMultiplesOfFiveWithoutMultiThreading(int numOfArrays, List<int[]> arraysList) {
         List<int[]> result = new ArrayList<>();
         for (int i = 0; i < numOfArrays; i++) {
@@ -657,8 +654,6 @@ public class TABA {
             System.out.println(Arrays.toString(arr));
         }
     }
-
-    // Question 4 (c)
     public static List<int[]> sortAndRemoveMultiplesOfFiveWithMultiThreading(int numOfArrays, List<int[]> arraysList) throws InterruptedException {
         List<int[]> result = new ArrayList<>();
         Thread[] threads = new Thread[numOfArrays];
