@@ -34,19 +34,34 @@ public class TABA {
         // Invoke question 1 (e)
 //        multiThreadedSorting(stocks);
 
-        // Invoke question 2 (a)
+        // Invoke question 2
         Random random = new Random();
-        Stock[] unsortedStockArray = new Stock[]{stocks[random.nextInt(0, 10)], stocks[random.nextInt(11, 20)], stocks[random.nextInt(21, 30)],stocks[random.nextInt(31, 40)]};
-
-        // Create an unsorted linked list of Stock objects
-        LinkedList<Stock> stocksLinkedList = new LinkedList<>();
+        Stock[] unsortedStockArray = new Stock[]{stocks[random.nextInt(0, 10)], stocks[random.nextInt(11, 20)], stocks[random.nextInt(21, 30)], stocks[random.nextInt(31, 40)]};
+        StockLinkedList<Stock> stocksLinkedList = new StockLinkedList<>();
         for (int i = 0; i < unsortedStockArray.length; i++) {
             stocksLinkedList.add(unsortedStockArray[i]);
         }
+        Stock newItem = stocks[random.nextInt(200, 300)];
 
+
+        // Invoke question 2 (a)
         retrieveLastItemsUnsorted(unsortedStockArray);
         retrieveLastItemsSorted(unsortedStockArray);
         retrieveLastItemsLinked(stocksLinkedList);
+
+        // Invoke question 2 (b)
+        insertItemsUnsorted(unsortedStockArray, newItem);
+        insertItemsSorted(unsortedStockArray, newItem);
+        getItemsAtIndexLinkedList(stocksLinkedList, newItem);
+
+        // Invoke question 2 (c)
+        getItemAtIndexUnsorted(unsortedStockArray,2);
+        getItemAtIndexSorted(unsortedStockArray,2);
+        getItemsAtIndexLinkedList(stocksLinkedList, 2);
+
+        // Invoke question 2 (d)
+        // Invoke question 2 (e)
+        // Invoke question 2 (f)
 
 
         // Invoke question 4 (b)
@@ -178,7 +193,7 @@ public class TABA {
 
         @Override
         public String toString() {
-            return "Stock{" +
+            return "Stock {" +
                     "stockNo=" + stockNo +
                     ", stockSize=" + stockSize +
                     ", profit=" + profit +
@@ -339,36 +354,204 @@ public class TABA {
         bw.close();
     }
 
+    // Question 2
+    public static class StockLinkedList<T> {
+        private Node<T> head;
+        private int size;
+
+        private static class Node<T> {
+            private T data;
+            private Node<T> next;
+
+            public Node(T data) {
+                this.data = data;
+                this.next = null;
+            }
+
+            public T getData() {
+                return data;
+            }
+
+            public void setData(T data) {
+                this.data = data;
+            }
+
+            public Node<T> getNext() {
+                return next;
+            }
+
+            public void setNext(Node<T> next) {
+                this.next = next;
+            }
+        }
+
+        public StockLinkedList() {
+            this.head = null;
+            this.size = 0;
+        }
+
+        public void add(T data) {
+            Node<T> newNode = new Node<>(data);
+            if (head == null) {
+                head = newNode;
+            } else {
+                Node<T> current = head;
+                while (current.getNext() != null) {
+                    current = current.getNext();
+                }
+                current.setNext(newNode);
+            }
+            size++;
+        }
+
+        public T get(int index) {
+            if (index < 0 || index >= size) {
+                throw new IndexOutOfBoundsException();
+            }
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.getNext();
+            }
+            return current.getData();
+        }
+
+        public void insert(int index, T data) {
+            if (index < 0 || index > size) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            Node<T> newNode = new Node<>(data);
+
+            if (index == 0) {
+                newNode.setNext(head);
+                head = newNode;
+            } else {
+                Node<T> current = head;
+                for (int i = 0; i < index - 1; i++) {
+                    current = current.getNext();
+                }
+                newNode.setNext(current.getNext());
+                current.setNext(newNode);
+            }
+            size++;
+        }
+
+        public void insertLast(T data) {
+            Node<T> newNode = new Node<>(data);
+            Node<T> current = head;
+            while (current.getNext() != null) {
+                current = current.getNext();
+            }
+            current.setNext(newNode);
+        }
+    }
+
+
     // Question 2 (a)
-    public static void retrieveLastItemsUnsorted(Stock[] stocks) {
+    public static void retrieveLastItemsUnsorted(Stock[] unsortedStockArray) {
         // Retrieve last item from unsorted array
         Long startTime = System.nanoTime();
-        Stock lastUnsorted = stocks[stocks.length - 1];
+        Stock lastUnsorted = unsortedStockArray[unsortedStockArray.length - 1];
         Long endTime = System.nanoTime();
 
         // Print results
-        System.out.println("Retrieve Last item in unsorted array: " + lastUnsorted+ "in "+(endTime-startTime)+" seconds");
+        System.out.println("Retrieve Last item in unsorted array: " + lastUnsorted + "in " + (endTime - startTime) + " seconds");
     }
-    public static void retrieveLastItemsSorted(Stock[] stocks) {
-        Stock[] sortedStockArray = mergeSort(stocks, 2);
+
+    public static void retrieveLastItemsSorted(Stock[] unsortedStockArray) {
+        Stock[] sortedStockArray = mergeSort(unsortedStockArray, 2);
         // Retrieve last item from sorted array
         Long startTime = System.nanoTime();
-        Stock lastSorted = stocks[stocks.length - 1];
+        Stock lastSorted = sortedStockArray[sortedStockArray.length - 1];
         Long endTime = System.nanoTime();
 
         // Print results
-        System.out.println("Retrieve Last item in sorted array: " + lastSorted+ "in "+(endTime-startTime)+" seconds");
+        System.out.println("Retrieve Last item in sorted array: " + lastSorted + "in " + (endTime - startTime) + " seconds");
     }
-    public static void retrieveLastItemsLinked(LinkedList<Stock> stocksLinkedList) {
+
+    public static void retrieveLastItemsLinked(StockLinkedList<Stock> stocksLinkedList) {
         // Retrieve last item from sorted array
         Long startTime = System.nanoTime();
-        Stock lastLinkedList = stocksLinkedList.getLast();
+        Stock lastLinkedList = stocksLinkedList.get(stocksLinkedList.size - 1);
         Long endTime = System.nanoTime();
 
         // Print results
-        System.out.println("Retrieve Last item in linked list: " + lastLinkedList+ "in "+(endTime-startTime)+" seconds");
+        System.out.println("Retrieve Last item in linked list: " + lastLinkedList + "in " + (endTime - startTime) + " seconds");
     }
 
+    // Question 2 (b)
+    public static void insertItemsUnsorted(Stock[] unsortedStockArray, Stock item) {
+        // Insert new item to unsorted array
+        Long startTime = System.nanoTime();
+        Stock[] newArray = Arrays.copyOf(unsortedStockArray, unsortedStockArray.length + 1);
+        newArray[unsortedStockArray.length] = item;
+        unsortedStockArray = newArray;
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Insert new item: " + item + " to unsorted array in " + (endTime - startTime) + " seconds");
+    }
+
+    public static void insertItemsSorted(Stock[] unsortedStockArray, Stock item) {
+        // Sort array first
+        Stock[] sortedStockArray = mergeSort(unsortedStockArray, 4);
+
+        // Insert new item to sorted array
+        Long startTime = System.nanoTime();
+        Stock[] newArray = Arrays.copyOf(sortedStockArray, sortedStockArray.length + 1);
+        newArray[sortedStockArray.length] = item;
+        sortedStockArray = newArray;
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Insert new item: " + item + " to sorted array: " + "in " + (endTime - startTime) + " seconds");
+    }
+
+    public static void getItemsAtIndexLinkedList(StockLinkedList<Stock> stockLinkedList, Stock item) {
+        // Insert new item to linkedList
+        Long startTime = System.nanoTime();
+        stockLinkedList.insertLast(item);
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Insert new item: " + item + " to linkedList: " + "in " + (endTime - startTime) + " seconds");
+    }
+
+    // Question 2 (c)
+    public static Stock getItemAtIndexUnsorted(Stock[] unsortedStockArray, int index) {
+        if (index < 0 || index >= unsortedStockArray.length) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds!");
+        }
+        // Print results
+        Long startTime = System.nanoTime();
+        Stock result = unsortedStockArray[index];
+        Long endTime = System.nanoTime();
+        System.out.println("Get item at Index: " + index + " in unsorted array in " + (endTime - startTime) + " seconds");
+        return result;
+    }
+    public static Stock getItemAtIndexSorted(Stock[] unsortedStockArray, int index) {
+        Stock[] sortedStockArray = mergeSort(unsortedStockArray, 4);
+
+        if (index < 0 || index >= sortedStockArray.length) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds!");
+        }
+        // Print results
+        Long startTime = System.nanoTime();
+        Stock result = sortedStockArray[index];
+        Long endTime = System.nanoTime();
+        System.out.println("Get item at Index: " + index + " in sorted array in " + (endTime - startTime) + " seconds");
+        return result;
+    }
+    public static Stock getItemsAtIndexLinkedList(StockLinkedList<Stock> stockLinkedList, int index) {
+        // Insert new item to linkedList
+        Long startTime = System.nanoTime();
+        Stock result = stockLinkedList.get(index);
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Get item at Index: " + index + " in linkedList: " + "in " + (endTime - startTime) + " seconds");
+        return result;
+    }
 
 
     // Question 4 (b)
