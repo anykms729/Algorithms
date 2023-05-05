@@ -32,7 +32,22 @@ public class TABA {
 //        }
 
         // Invoke question 1 (e)
-        multiThreadedSorting(stocks);
+//        multiThreadedSorting(stocks);
+
+        // Invoke question 2 (a)
+        Random random = new Random();
+        Stock[] unsortedStockArray = new Stock[]{stocks[random.nextInt(0, 10)], stocks[random.nextInt(11, 20)], stocks[random.nextInt(21, 30)],stocks[random.nextInt(31, 40)]};
+
+        // Create an unsorted linked list of Stock objects
+        LinkedList<Stock> stocksLinkedList = new LinkedList<>();
+        for (int i = 0; i < unsortedStockArray.length; i++) {
+            stocksLinkedList.add(unsortedStockArray[i]);
+        }
+
+        retrieveLastItemsUnsorted(unsortedStockArray);
+        retrieveLastItemsSorted(unsortedStockArray);
+        retrieveLastItemsLinked(stocksLinkedList);
+
 
         // Invoke question 4 (b)
 //        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
@@ -95,7 +110,7 @@ public class TABA {
                     columnName = "stock_no";
                     break;
                 case 1:
-                    columnName = "product_size";
+                    columnName = "stock_Size";
                     break;
                 case 2:
                     columnName = "profit";
@@ -181,17 +196,17 @@ public class TABA {
 
         public int compareTo(Stock other, int choice) {
             switch (choice) {
-                case 1: // compare based on stockNo
+                case 0: // compare based on stockNo
                     return this.stockNo - other.stockNo;
-                case 2: // compare based on stockSize
+                case 1: // compare based on stockSize
                     return Float.compare(this.stockSize, other.stockSize);
-                case 3: // compare based on profit
+                case 2: // compare based on profit
                     return Float.compare(this.profit, other.profit);
-                case 4: // compare based on productType
+                case 3: // compare based on productType
                     return this.productType.compareTo(other.productType);
-                case 5: // compare based on weight
+                case 4: // compare based on weight
                     return Float.compare(this.weight, other.weight);
-                case 6: // compare based on productName
+                case 5: // compare based on productName
                     return this.productName.compareTo(other.productName);
                 default:
                     throw new IllegalArgumentException("Invalid choice");
@@ -222,9 +237,9 @@ public class TABA {
     }
 
     // Question 1 (d)
-    public static void mergeSort(Stock[] arr, int choice) {
+    public static Stock[] mergeSort(Stock[] arr, int choice) {
         if (arr == null || arr.length <= 1) {
-            return;
+            return arr;
         }
         int mid = arr.length / 2;
         Stock[] left = Arrays.copyOfRange(arr, 0, mid);
@@ -232,6 +247,7 @@ public class TABA {
         mergeSort(left, choice);
         mergeSort(right, choice);
         merge(arr, left, right, choice);
+        return arr;
     }
 
     private static void merge(Stock[] arr, Stock[] left, Stock[] right, int choice) {
@@ -265,7 +281,7 @@ public class TABA {
         String outputFileName = "sortedStock_C" + (choice - 1) + ".csv";
         writeStockData(stocks, outputFileName);
 
-        System.out.println("Thread " + columnIndex + " sorted column index " + columnIndex + " (Column name: " + stocks[columnIndex].getColumnName(columnIndex)+")" + ", generating " + outputFileName + " file as an output");
+        System.out.println("Thread " + columnIndex + " sorted column index " + columnIndex + " (Column name: " + stocks[columnIndex].getColumnName(columnIndex) + ")" + ", generating " + outputFileName + " file as an output");
     }
 
     public static void mergeSortForMultiThreading(Stock[] stocks, int choice) {
@@ -322,6 +338,37 @@ public class TABA {
         bw.flush(); // flush and close the BufferedWriter
         bw.close();
     }
+
+    // Question 2 (a)
+    public static void retrieveLastItemsUnsorted(Stock[] stocks) {
+        // Retrieve last item from unsorted array
+        Long startTime = System.nanoTime();
+        Stock lastUnsorted = stocks[stocks.length - 1];
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Retrieve Last item in unsorted array: " + lastUnsorted+ "in "+(endTime-startTime)+" seconds");
+    }
+    public static void retrieveLastItemsSorted(Stock[] stocks) {
+        Stock[] sortedStockArray = mergeSort(stocks, 2);
+        // Retrieve last item from sorted array
+        Long startTime = System.nanoTime();
+        Stock lastSorted = stocks[stocks.length - 1];
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Retrieve Last item in sorted array: " + lastSorted+ "in "+(endTime-startTime)+" seconds");
+    }
+    public static void retrieveLastItemsLinked(LinkedList<Stock> stocksLinkedList) {
+        // Retrieve last item from sorted array
+        Long startTime = System.nanoTime();
+        Stock lastLinkedList = stocksLinkedList.getLast();
+        Long endTime = System.nanoTime();
+
+        // Print results
+        System.out.println("Retrieve Last item in linked list: " + lastLinkedList+ "in "+(endTime-startTime)+" seconds");
+    }
+
 
 
     // Question 4 (b)
