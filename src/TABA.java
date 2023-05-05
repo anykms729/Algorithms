@@ -52,17 +52,12 @@ public class TABA {
         // Invoke question 2 (b)
         insertItemsUnsorted(unsortedStockArray, newItem);
         insertItemsSorted(unsortedStockArray, newItem);
-        getItemsAtIndexLinkedList(stocksLinkedList, newItem);
+        insertItemsLinkedList(stocksLinkedList, newItem);
 
         // Invoke question 2 (c)
-        getItemAtIndexUnsorted(unsortedStockArray,2);
-        getItemAtIndexSorted(unsortedStockArray,2);
-        getItemsAtIndexLinkedList(stocksLinkedList, 2);
-
-        // Invoke question 2 (d)
-        // Invoke question 2 (e)
-        // Invoke question 2 (f)
-
+        getItemAtIndexUnsorted(unsortedStockArray, 3);
+        getItemAtIndexSorted(unsortedStockArray, 3);
+        getItemsAtIndexLinkedList(stocksLinkedList, 3);
 
         // Invoke question 4 (b)
 //        sortAndRemoveMultiplesOfFiveImplementationWithoutMultiThreading();
@@ -507,7 +502,7 @@ public class TABA {
         System.out.println("Insert new item: " + item + " to sorted array: " + "in " + (endTime - startTime) + " seconds");
     }
 
-    public static void getItemsAtIndexLinkedList(StockLinkedList<Stock> stockLinkedList, Stock item) {
+    public static void insertItemsLinkedList(StockLinkedList<Stock> stockLinkedList, Stock item) {
         // Insert new item to linkedList
         Long startTime = System.nanoTime();
         stockLinkedList.insertLast(item);
@@ -526,9 +521,10 @@ public class TABA {
         Long startTime = System.nanoTime();
         Stock result = unsortedStockArray[index];
         Long endTime = System.nanoTime();
-        System.out.println("Get item at Index: " + index + " in unsorted array in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index +" "+ result + " in unsorted array in " + (endTime - startTime) + " seconds");
         return result;
     }
+
     public static Stock getItemAtIndexSorted(Stock[] unsortedStockArray, int index) {
         Stock[] sortedStockArray = mergeSort(unsortedStockArray, 4);
 
@@ -539,9 +535,10 @@ public class TABA {
         Long startTime = System.nanoTime();
         Stock result = sortedStockArray[index];
         Long endTime = System.nanoTime();
-        System.out.println("Get item at Index: " + index + " in sorted array in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index +" "+ result + " in sorted array in " + (endTime - startTime) + " seconds");
         return result;
     }
+
     public static Stock getItemsAtIndexLinkedList(StockLinkedList<Stock> stockLinkedList, int index) {
         // Insert new item to linkedList
         Long startTime = System.nanoTime();
@@ -549,7 +546,7 @@ public class TABA {
         Long endTime = System.nanoTime();
 
         // Print results
-        System.out.println("Get item at Index: " + index + " in linkedList: " + "in " + (endTime - startTime) + " seconds");
+        System.out.println("Get item at Index: " + index +" "+ result + " in linkedList in " + (endTime - startTime) + " seconds");
         return result;
     }
 
